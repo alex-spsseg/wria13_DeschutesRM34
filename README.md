@@ -6,4 +6,4 @@ Live site: [All tours](https://alex-spsseg.github.io/wria13_DeschutesRM34/tours.
 
 ## Tours
 
-- [Site Visit (34)](https://alex-spsseg.github.io/wria13_DeschutesRM34/index.html?tour=20261104) (visited 2026-11-04, 5 stops)
+- [Site Visit (34cfs)](https://alex-spsseg.github.io/wria13_DeschutesRM34/index.html?tour=20261104) (visited 2026-11-04, 5 stops)
