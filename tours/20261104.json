@@ -3,7 +3,7 @@
   "sites": [
     {
       "site_id": "dji_20261104135005_0005_d",
-      "display_name": "Stop 1",
+      "display_name": "Overview",
       "lat": 46.81281083333333,
       "lng": -122.5199765,
       "platform": "aerial",
@@ -13,7 +13,7 @@
     },
     {
       "site_id": "dji_20261104134522_0001_d",
-      "display_name": "Stop 2",
+      "display_name": "Stop 1",
       "lat": 46.811272249999995,
       "lng": -122.51861419444444,
       "platform": "aerial",
@@ -22,7 +22,7 @@
     },
     {
       "site_id": "dji_20261104134631_0002_d",
-      "display_name": "Stop 3",
+      "display_name": "Stop 2",
       "lat": 46.81252336111111,
       "lng": -122.51918255555556,
       "platform": "aerial",
@@ -31,7 +31,7 @@
     },
     {
       "site_id": "dji_20261104134743_0003_d",
-      "display_name": "Stop 4",
+      "display_name": "Stop 3",
       "lat": 46.81311927777777,
       "lng": -122.5197338888889,
       "platform": "aerial",
@@ -40,7 +40,7 @@
     },
     {
       "site_id": "dji_20261104134855_0004_d",
-      "display_name": "Stop 5",
+      "display_name": "Stop 4",
       "lat": 46.81249483333333,
       "lng": -122.52103327777778,
       "platform": "aerial",
@@ -50,7 +50,24 @@
   ],
   "basemap_type": "xyz_tile",
   "basemap_url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-  "overlays": [],
+  "overlays": [
+    {
+      "label": "Ortho (11/4/26, 34cfs)",
+      "url": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/DeschutesRM34_20261104_34cfs_ortho/MapServer/tile/{z}/{y}/{x}",
+      "opacity": 1.0,
+      "default_on": true,
+      "type": "tile",
+      "max_zoom": 21
+    },
+    {
+      "label": "Ortho (3/31/26, 233cfs)",
+      "url": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/DeschutesRM34_20260331_233cfs_ortho/MapServer/tile/{z}/{y}/{x}",
+      "opacity": 1.0,
+      "default_on": true,
+      "type": "tile",
+      "max_zoom": 21
+    }
+  ],
   "forward_label": "",
   "backward_label": "",
   "field_visit_date": "2026-11-04"
