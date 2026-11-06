@@ -284,6 +284,15 @@
     repo has a flow link saved in the publisher (Tours Page Settings). */
     #site-map-flow-btn { right: 224px; display: none; }
     #site-map-flow-btn.armed { background: #019fc4; color: #fff; border-color: #019fc4; }
+    /* The 3D button opens this place in the terrain viewer. Hidden until the repo has a terrain link saved in the publisher
+    (Tours Page Settings), and while the stop is outside that terrain site. */
+    #site-map-terrain-btn {
+      position: absolute; z-index: 1600; top: 8px; right: 260px; width: 30px; height: 30px; border-radius: 4px;
+      border: 2px solid rgba(0,0,0,0.2); background: #fff; color: #333; cursor: pointer; padding: 0;
+      display: none; align-items: center; justify-content: center;
+    }
+    #site-map-terrain-btn:hover { background: #f4f4f4; }
+    #container.swapped #site-map-terrain-btn { top: 64px; }
     /* Swap: the map takes the big screen (placed exactly like the enlarged map) and the 360 view moves into the inset,
     at the size the map inset was. The swap button sits under the make the map bigger button on a desktop. */
     #site-map-swap-btn { left: 10px; top: 118px; }
@@ -460,7 +469,8 @@
       #site-map-follow-btn { right: 140px; }
       #site-map-expand-btn { right: 184px; left: auto; top: 8px; }
       #site-map-flow-btn { right: 228px; }
-      #site-map-swap-btn { right: 272px; left: auto; top: 8px; }
+      #site-map-terrain-btn { width: 38px; height: 38px; right: 272px; }
+      #site-map-swap-btn { right: 316px; left: auto; top: 8px; }
       #site-map-panel .leaflet-top.leaflet-right { margin-top: 54px; }
       #site-map-panel .leaflet-bar a { width: 38px; height: 38px; line-height: 38px; }
       #site-map-panel .leaflet-control-layers-toggle { width: 38px; height: 38px; background-size: 22px 22px; }
@@ -506,6 +516,13 @@
     }
     #view-menu.open #view-menu-list { display: flex; }
     #view-menu-list .ctrl-btn { text-align: left; white-space: nowrap; }
+    /* The Tour, Terrain, Flow pill: the same switcher the terrain and flow viewers show. Terrain and Flow appear only when the repo
+    has those links (Tours Page Settings), and Terrain only for stops inside the terrain site. */
+    #linked-pill { display: flex; align-items: center; background: rgba(14,27,51,0.94); border: 1px solid #1b3f95; border-radius: 22px; padding: 3px; }
+    #linked-pill .on, #linked-pill button { padding: 5px 12px; border-radius: 16px; font-size: 12px; font-weight: bold; border: 0; font-family: inherit; }
+    #linked-pill .on { background: #019fc4; color: #fff; }
+    #linked-pill button { background: transparent; color: #e8eef7; cursor: pointer; }
+    #linked-pill button:hover { background: #132447; }
 
     .ctrl-btn {
       background: #1b3f95; color: #ffffff; border: 1px solid #019fc4;
@@ -1255,7 +1272,7 @@
 </head>
 <body>
 
-  <div id="build-timestamp">Built 2026-11-05 14:25:36</div>
+  <div id="build-timestamp">Built 2026-11-06 11:09:13</div>
 
   <div id="status-banner"></div>
 
@@ -1312,6 +1329,11 @@
       <button id="control-bar-toggle" class="ctrl-btn" type="button" title="Menu">&#8942;</button>
       <div id="control-bar-buttons">
         <button id="toggle-btn" class="ctrl-btn" type="button" style="display:none;">Toggle</button>
+        <div id="linked-pill" style="display:none" role="navigation" aria-label="Other viewers for this place">
+          <span class="on" title="You are in the 360 tour">Tour</span>
+          <button id="lp-terrain" type="button" style="display:none" title="Open this stop on the 3D terrain">Terrain</button>
+          <button id="lp-flow" type="button" style="display:none" title="Open this place in the flow viewer">Flow</button>
+        </div>
         <button id="hotspots-toggle-btn" class="ctrl-btn" type="button" style="display:none;"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="lbl">Hide Hotspots</span></button>
         <button id="map-toggle-btn" class="ctrl-btn" type="button" style="display:none;"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg></span><span class="lbl">Show Map</span></button>
         <div id="view-menu">
@@ -1323,7 +1345,6 @@
           </div>
         </div>
         <button id="copy-link-btn" class="ctrl-btn" type="button" style="display:none;" title="Copy a link to this stop and view"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span><span class="lbl">Copy Link</span></button>
-        <button id="terrain-link-btn" class="ctrl-btn" type="button" style="display:none;" title="Show this stop on the 3D terrain"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19l6-10 4 6 3-4 5 8z"/><path d="M3 19h18"/></svg></span><span class="lbl">Show on Terrain</span></button>
         <button id="info-btn" class="ctrl-btn" type="button" title="Help">&#9432; Help</button>
       </div>
     </div>
@@ -1363,6 +1384,7 @@
       <button id="site-map-swap-btn" type="button" title="Swap: show the map big and the 360 view in the inset"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7zM17 17H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11z"/></svg></button>
       <div id="swap-tools"><button type="button" id="swap-zoom-in" title="Zoom in" aria-label="Zoom in">+</button><button type="button" id="swap-zoom-out" title="Zoom out" aria-label="Zoom out">&#8722;</button><button type="button" id="swap-tools-back" title="Swap back: 360 view big, map in the inset" aria-label="Swap back"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7zM17 17H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11z"/></svg></button></div>
       <button id="site-map-flow-btn" type="button" title="Show the animated water flow on this map"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8c2 0 2-2 4.5-2S10 8 12 8s2.5-2 4.5-2S19 8 21 8"/><path d="M3 13c2 0 2-2 4.5-2S10 13 12 13s2.5-2 4.5-2S19 13 21 13"/><path d="M3 18c2 0 2-2 4.5-2S10 18 12 18s2.5-2 4.5-2S19 18 21 18"/></svg></button>
+      <button id="site-map-terrain-btn" type="button" title="Open this place in the 3D terrain viewer"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19l6-10 4 6 3-4 5 8z"/><path d="M3 19h18"/></svg></button>
       <button id="site-map-coords-btn" type="button" title="Coordinates: go to a position, or copy the cursor position (right click the map to drop a pin)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg></button>
       <div id="site-map-coords-box">
         <input id="site-map-coords-input" type="text" placeholder="Go to lat, lng" autocomplete="off" spellcheck="false" aria-label="Go to coordinates, latitude then longitude">
@@ -4314,11 +4336,12 @@
     function updateFlowButton() {
       var b = document.getElementById('site-map-flow-btn');
       if (b) b.style.display = flowLink ? 'flex' : 'none';
+      try { refreshLinkedButtons(); } catch (e) { /* terrain buttons not ready yet */ }
     }
     fetch('landing_config.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : {}; })
       .catch(function () { return {}; })
-      .then(function (c) { flowLink = String((c && c.flow_url) || '').trim(); updateFlowButton(); });
+      .then(function (c) { flowLink = String((c && c.flow_url) || '').trim(); updateFlowButton(); setTerrainLink(String((c && c.terrain_url) || '').trim()); });
 
     function flowInfo() {
       var u;
@@ -4353,8 +4376,80 @@
         if (rr.depth !== rr.def.depth) u.searchParams.set('rd', rr.depth); else u.searchParams.delete('rd');
         if (rr.velocity !== rr.def.velocity) u.searchParams.set('rv', rr.velocity); else u.searchParams.delete('rv');
       }
+      try { u.searchParams.set('tour', tourReturnUrl()); if (terrainLink) u.searchParams.set('terrain', terrainLink); } catch (e) { /* no way back to send */ }
       window.open(u.toString(), '_blank', 'noopener');
     }
+
+    // ---- Linked viewers: the 3D terrain viewer (and the flow viewer above), when this repo has them --------------------
+    // landing_config.json can hold terrain_url, set in the publisher under Tours Page Settings. It shows the Tour, Terrain, Flow pill in the
+    // control bar and a 3D button on the map, only for stops that fall inside that terrain site. The hand off carries the stop
+    // and its position, and a link back to exactly this stop, so the terrain viewer can offer Back to tour.
+    var terrainLink = '', terrainBounds = null;
+    function tourKey() { try { return (typeof tourId !== 'undefined' && tourId) ? tourId : 'single'; } catch (e) { return 'single'; } }
+    function setTerrainLink(cfg) {
+      var link = cfg;
+      if (!link) {           // a repo without the setting still works when the terrain viewer sent the address, and remembers it
+        try {
+          var q = new URLSearchParams(window.location.search).get('terrain');
+          if (q && /^https?:\/\//i.test(q)) { link = q; try { localStorage.setItem('terrainLink:' + tourKey(), q); } catch (e) {} }
+          else { try { link = localStorage.getItem('terrainLink:' + tourKey()) || ''; } catch (e) { link = ''; } }
+        } catch (e) { link = ''; }
+      }
+      terrainLink = /^https?:\/\//i.test(link || '') ? link : '';
+      terrainBounds = null;
+      if (terrainLink) {
+        try {
+          var u = new URL(terrainLink, location.href), site = u.searchParams.get('site');
+          if (site) {
+            fetch(new URL('sites/' + encodeURIComponent(site) + '/manifest.json', u).toString(), { cache: 'no-store' })
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (m) { if (m && m.bounds4326) { terrainBounds = m.bounds4326; refreshLinkedButtons(); } })
+              .catch(function () { /* no bounds: the button just shows */ });
+          }
+        } catch (e) { /* not a usable address */ }
+      }
+      refreshLinkedButtons();
+    }
+    function stopInTerrain() {
+      if (!terrainBounds) return true;
+      var ll = currentSiteLatLng(); if (!ll) return true;
+      var b = terrainBounds; return ll[0] >= b[1] && ll[0] <= b[3] && ll[1] >= b[0] && ll[1] <= b[2];
+    }
+    function refreshLinkedButtons() {
+      var t = !!terrainLink && stopInTerrain(), f = !!flowLink;
+      var inset = document.getElementById('site-map-terrain-btn'); if (inset) inset.style.display = t ? 'flex' : 'none';
+      var pill = document.getElementById('linked-pill'); if (!pill) return;
+      document.getElementById('lp-terrain').style.display = t ? '' : 'none';
+      document.getElementById('lp-flow').style.display = f ? '' : 'none';
+      pill.style.display = (t || f) ? 'flex' : 'none';
+    }
+    function tourReturnUrl() {                // this tour page, at this stop, without the passing view parameters
+      var u = new URL(location.href); u.hash = '';
+      ['terrain', 'yaw', 'pitch', 'fov'].forEach(function (k) { u.searchParams.delete(k); });
+      return u.toString();
+    }
+    function currentStopName() {
+      if (pendingMapData && pendingMapData.type === 'tour') {
+        var s = (pendingMapData.sites || []).filter(function (x) { return x.site_id === activeTourSiteId; })[0];
+        return (s && (s.display_name || s.site_id)) || '';
+      }
+      return (pendingMapData && pendingMapData.label) || '';
+    }
+    function goTerrain() {
+      var u; try { u = new URL(terrainLink, location.href); } catch (e) { return; }
+      var ll = currentSiteLatLng();
+      if (ll) { u.searchParams.set('lat', ll[0].toFixed(6)); u.searchParams.set('lng', ll[1].toFixed(6)); }
+      var name = currentStopName(); if (name) u.searchParams.set('stop', name);
+      u.searchParams.set('tour', tourReturnUrl());
+      if (flowLink) u.searchParams.set('flow', flowLink);
+      window.location.href = u.toString();
+    }
+    (function () {
+      var t1 = document.getElementById('site-map-terrain-btn'), t2 = document.getElementById('lp-terrain'), f2 = document.getElementById('lp-flow');
+      if (t1) t1.addEventListener('click', goTerrain);
+      if (t2) t2.addEventListener('click', goTerrain);
+      if (f2) f2.addEventListener('click', function () { openFlowViewer(); });
+    })();
 
     function createFlowLayer(map, info) {
       var base = info.base, siteId = info.site;
@@ -7974,6 +8069,7 @@
         var fallbackLabel = linkEl ? linkEl.textContent : sid;
         activeTourSiteId = sid;
         updateTourUrl(sid);
+        try { refreshLinkedButtons(); } catch (e) { /* not ready */ }
         updateLinkAllUndoVisibility();
         updateActiveMapMarker();
         try { if (flowLayer && flowLayer.isOn()) flowLayer.refreshHere(); } catch (e) { /* flow layer not ready */ }
@@ -8136,31 +8232,6 @@
 
       var copyLinkBtn = document.getElementById('copy-link-btn');
       copyLinkBtn.style.display = 'inline-block';
-      // Show on Terrain: the 3D terrain viewer adds ?terrain=<its address> to the tour links it makes. The address is
-      // remembered in this browser, so the button stays after a refresh or a later visit to the same tour.
-      (function () {
-        var tBtn = document.getElementById('terrain-link-btn');
-        if (!tBtn) return;
-        var key = 'terrainLink:' + tourId, link = null;
-        try {
-          var fromUrl = new URLSearchParams(window.location.search).get('terrain');
-          if (fromUrl && /^https?:\/\//i.test(fromUrl)) { link = fromUrl; try { localStorage.setItem(key, link); } catch (e) {} }
-          else { try { link = localStorage.getItem(key); } catch (e) {} }
-        } catch (err) {}
-        if (!link || !/^https?:\/\//i.test(link)) return;
-        tBtn.style.display = 'inline-block';
-        tBtn.addEventListener('click', function () {
-          var u;
-          try { u = new URL(link); } catch (e) { return; }
-          var cur = null;
-          (tourSiteOptions || []).forEach(function (o) { if (!cur && bmNorm(o.site_id) === bmNorm(activeTourSiteId)) cur = o; });
-          if (cur) {
-            u.searchParams.set('stop', cur.display_name || cur.site_id);
-            if (cur.lat != null && cur.lng != null) { u.searchParams.set('lat', cur.lat); u.searchParams.set('lng', cur.lng); }
-          }
-          window.location.href = u.toString();
-        });
-      })();
       copyLinkBtn.addEventListener('click', function () {
         var q = new URLSearchParams();
         q.set('tour', tourId);
